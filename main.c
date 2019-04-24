@@ -32,7 +32,7 @@ char train_file[MAX_STRING], output_file[MAX_STRING], mp_output_file[MAX_STRING]
 struct vocab_word *vocab;
 struct vocab_mp *mp_vocab;
 int binary = 0, debug_mode = 2, window = 5, num_threads = 1, is_deepwalk = 1, no_circle = 1, static_win = 1;
-int sigmoid_reg = 0;
+int sigmoid_reg = 0, distance = 500;
 int *vocab_hash, *mp_vocab_hash, *node2type, *node2tag;
 long long vocab_max_size = 1000, vocab_size = 0, layer1_size = 64;
 long long mp_vocab_max_size = 1000, mp_vocab_size = 0;
@@ -871,7 +871,7 @@ void *TrainModelThread(void *id) {
                         real lat2 = node2lat[context];
                         real lon2 = node2lon[context];
                         int dis = CalcDistance(lat1, lon1, lat2, lon2);
-                        if (dis <= 500) label = 1;
+                        if (dis <= distance) label = 1;
                         // negative sampling
                     } else {
                         next_random = next_random * (unsigned long long)25214903917 + 11;
@@ -882,7 +882,7 @@ void *TrainModelThread(void *id) {
                         real lat2 = node2lat[context];
                         real lon2 = node2lon[context];
                         int dis = CalcDistance(lat1, lon1, lat2, lon2);
-                        if (dis <= 500) label = 1;
+                        if (dis <= distance) label = 1;
                     }
 
                     // training of a data
@@ -1039,7 +1039,7 @@ int ArgPos(char *str, int argc, char **argv) {
 int main(int argc, char **argv) {
     int i;
     if (argc == 1) {
-        printf("HIN representation learning\n\n");
+        printf("road2vec representation learning\n\n");
         printf("Options:\n");
         printf("Parameters for training:\n");
         printf("\t-size <int>\n");
@@ -1054,6 +1054,8 @@ int main(int argc, char **argv) {
         printf("\t\tNode latitude file, format of line is '<node_id> <latitude_value>'\n");
         printf("\t-lon_file <file>\n");
         printf("\t\tNode longitude file, format of line is '<node_id> <longitude_value>'\n");
+        printf("\t-distance <int>\n");
+        printf("\t\tthe distance want to learning? default is 500.\n");
         printf("\t-alpha <float>\n");
         printf("\t\tSet the starting learning rate; default is 0.025\n");
         printf("\t-beta <float>\n");
@@ -1083,6 +1085,7 @@ int main(int argc, char **argv) {
     if ((i = ArgPos((char *)"-tag_file", argc, argv)) > 0) strcpy(tag_file, argv[i + 1]);
     if ((i = ArgPos((char *)"-lat_file", argc, argv)) > 0) strcpy(lat_file, argv[i + 1]);
     if ((i = ArgPos((char *)"-lon_file", argc, argv)) > 0) strcpy(lon_file, argv[i + 1]);
+    if ((i = ArgPos((char *)"-distance", argc, argv)) > 0) distance = atoi(argv[i + 1]);
     if ((i = ArgPos((char *)"-alpha", argc, argv)) > 0) alpha = atof(argv[i + 1]);
     if ((i = ArgPos((char *)"-beta", argc, argv)) > 0) beta = atof(argv[i + 1]);
     if ((i = ArgPos((char *)"-output", argc, argv)) > 0) strcpy(output_file, argv[i + 1]);
