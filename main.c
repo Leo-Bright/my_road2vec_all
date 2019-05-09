@@ -1082,6 +1082,7 @@ int main(int argc, char **argv) {
     if ((i = ArgPos((char *)"-size", argc, argv)) > 0) layer1_size = atoi(argv[i + 1]);
     if ((i = ArgPos((char *)"-train", argc, argv)) > 0) strcpy(train_file, argv[i + 1]);
     if ((i = ArgPos((char *)"-type_file", argc, argv)) > 0) strcpy(type_file, argv[i + 1]);
+    printf("type data file (%s) not found!\n", type_file);
     if ((i = ArgPos((char *)"-tag_file", argc, argv)) > 0) strcpy(tag_file, argv[i + 1]);
     if ((i = ArgPos((char *)"-lat_file", argc, argv)) > 0) strcpy(lat_file, argv[i + 1]);
     if ((i = ArgPos((char *)"-lon_file", argc, argv)) > 0) strcpy(lon_file, argv[i + 1]);
