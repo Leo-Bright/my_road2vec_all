@@ -957,9 +957,10 @@ void TrainModel() {
     printf("Starting training using file %s\n", train_file); //node sequence
     starting_alpha = alpha;
     last_alpha = alpha;
+
+    LoadTypeFromTypeFile();//提取node type
     LearnVocabFromTrainFile(); // 从输入的node sequence 里提取node的信息
     LearnMpVocabFromTrainFile();//
-    LoadTypeFromTypeFile();//提取node type
     LoadTagFromTagFile();//提取node tag
     LoadLatFromLatFile();//提取node latitude
     LoadLonFromLonFile();//提取node lontitude
